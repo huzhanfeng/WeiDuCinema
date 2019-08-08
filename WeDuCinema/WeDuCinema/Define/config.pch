@@ -1,0 +1,244 @@
+//
+//  config.pch
+//  MyApp
+//
+//  Created by 耿荣林 on 2019/2/14.
+//  Copyright © 2019年 耿荣林. All rights reserved.
+//
+
+#ifndef config_pch
+#define config_pch
+
+/***iPhoneX的适配宏：***/
+// 判断是否是iPhone X
+#define iPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436),[[UIScreen mainScreen] currentMode].size) : NO)
+// 状态栏高度
+#define STATUS_BAR_HEIGHT (iPhoneX ? 44.f : 20.f)
+// 导航栏高度
+#define NAVIGATION_BAR_HEIGHT (iPhoneX ? 88.f : 64.f)
+// tabBar高度
+#define TAB_BAR_HEIGHT (iPhoneX ? (49.f+34.f) : 49.f)
+// home indicator高度
+#define HOME_INDICATOR_HEIGHT (iPhoneX ? 34.f : 0.f)
+
+/**判断是不是iOS系统，如果是iOS系统在真机和模拟器输出都是YES**/
+#if TARGET_OS_IPHONE
+#endif
+
+#if (TARGET_IPHONE_SIMULATOR)
+// 在模拟器的情况下
+#else
+// 在真机情况下
+#endif
+
+/**屏幕尺寸**/
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 // 当前Xcode支持iOS8及以上
+#define APPSCREEN_WIDTH ([[UIScreen mainScreen] respondsToSelector:@selector(nativeBounds)]?[UIScreen mainScreen].nativeBounds.size.width/[UIScreen mainScreen].nativeScale:[UIScreen mainScreen].bounds.size.width)
+#define APPSCREENH_HEIGHT ([[UIScreen mainScreen] respondsToSelector:@selector(nativeBounds)]?[UIScreen mainScreen].nativeBounds.size.height/[UIScreen mainScreen].nativeScale:[UIScreen mainScreen].bounds.size.height)
+#define APPSCREEN_SIZE ([[UIScreen mainScreen] respondsToSelector:@selector(nativeBounds)]?CGSizeMake([UIScreen mainScreen].nativeBounds.size.width/[UIScreen mainScreen].nativeScale,[UIScreen mainScreen].nativeBounds.size.height/[UIScreen mainScreen].nativeScale):[UIScreen mainScreen].bounds.size)
+#else // iOS8以下
+#define APPSCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
+#define APPSCREENH_HEIGHT [UIScreen mainScreen].bounds.size.height
+#define APPSCREEN_SIZE [UIScreen mainScreen].bounds.size
+#endif
+
+/***分辨率***/
+#define APPSCREEN_SCALE [UIScreen mainScreen].scale
+#define APPStatusBarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
+
+/***弱指针***/
+#define APPWeak(object)  __weak typeof(object) weak##object = object;
+/***强指针***/
+#define APPStrong(object)  __strong typeof(object) strong##object = object;
+
+/**获取图片**/
+#define APPGetImage(imageName) [UIImage imageNamed:[NSString stringWithFormat:@"%@",imageName]]
+
+/**获取当前语言**/
+#define APPGetCurrentLanguage ([[NSLocale preferredLanguages] objectAtIndex:0])
+
+/*** 当前系统版本判断 ***/
+#define APPIsAdvancedV(version) ([UIDevice currentDevice].systemVersion.doubleValue >= (version))
+
+/*** 将服务器返回的数据写入plist ***/
+#define APPWriteToPlist(data, filename) [data writeToFile:[NSString stringWithFormat:@"/Users/Boat/Desktop/%@.plist", filename] atomically:YES];
+
+/***获取系统版本***/
+#define APPSystemVersion [[UIDevice currentDevice] systemVersion]
+/***获取 bundle version版本号***/
+#define APPBundleVersion [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+
+/***获取BundleID***/
+#define APPBundleID [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"]
+/***获取app名字***/
+#define AppName [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"]
+
+#define isDebug     // 切换环境
+
+/*** 日志和接口 ***/
+#ifdef isDebug // /*** 开发与测试版（inHouse） ***/
+#if DEBUG   // cn
+// 和bundleID无关，但是在友盟中创建了两个app
+#define UMAppKey    @"59c9ce9c99f0c74d050003fd"
+#define UMChannelId     @"Inhouse_develop"
+// 和bundleID有关，智齿key
+#define ZCKey    @"2657940654064d43a261b555a955bf56" // cn // @"03e07d3634754a83a3950038e6f6d565" com(inhouse)
+// 和bundleID有关
+#define GDAppKey    @"ba8acf279e3ffce1b3f27f9491af85c5"
+//@"ba8acf279e3ffce1b3f27f9491af85c5" cn
+//@"8c2522687dc8b0dd8ef5144977124d28" com(inhouse)
+// 和bundleID无关
+#define BugtagsKey    @"d8a3cd9bf37b19f99101b3bb199af73c"
+//57fbad533143f0e87316dbc43e2f54c1 live
+// 和bundleID无关  证书和bundleID有关
+#define JPPushKey   @"8a6e9a879f434dbbcb584d96" //开发测试 // @"8a6e9a879f434dbbcb584d96"  dcf6a61f2a481a1c69c103ea
+#define EUKaLog(...) NSLog(__VA_ARGS__)
+#define EUKaLogFunc EUKaLog(@"%s", __func__);  // 111.203.253.252
+
+
+#define EUKaHttpServer(function) [NSString stringWithFormat:@"http://test.api.egcard.cn/%@",function]
+#define EUKaPicNetServer(function) [NSString stringWithFormat:@"http://test.img.egcard.cn/%@",function]
+#define EUKaPicUploadServer(function) [NSString stringWithFormat:@"http://test.img.egcard.cn/%@",function]
+#define EUKaPayNetServer(function) [NSString stringWithFormat:@"http://test.pay.egcard.cn/%@",function]
+#define EUKaH5Server(function) [NSString stringWithFormat:@"http://test.m.egcard.cn/%@",function]
+#define EUKUserProtocol @"http://m.egcard.cn/appStatic/agreement.html"
+#define kAppStoreVersion   [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+#define kAppStoreVersionShow   @"test.Http"
+
+#else  // com text
+#define UMAppKey    @"59c9ce9c99f0c74d050003fd"
+#define UMChannelId     @"Inhouse_test"
+#define ZCKey     @"03e07d3634754a83a3950038e6f6d565"
+#define GDAppKey    @"8c2522687dc8b0dd8ef5144977124d28"
+#define BugtagsKey    @"d8a3cd9bf37b19f99101b3bb199af73c"
+#define JPPushKey   @"dcf6a61f2a481a1c69c103ea"
+
+#define EUKaLog(...)  NSLog(__VA_ARGS__)
+#define EUKaLogFunc
+#define EUKaHttpServer(function)  [NSString stringWithFormat:@"http://api.egcard.cn/%@",function]
+#define EUKaPicNetServer(function) [NSString stringWithFormat:@"http://img.egcard.cn/%@",function]
+#define EUKaPayNetServer(function) [NSString stringWithFormat:@"http://pay.egcard.cn/%@",function]
+#define EUKaH5Server(function)     [NSString stringWithFormat:@"http://pay.egcard.cn/%@",function]
+#define EUKUserProtocol @"http://m.egcard.cn/appStatic/agreement.html"
+#define kAppStoreVersion   [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+#define kAppStoreVersionShow   @"Inhouse"
+#endif  /*** 开发与测试版 ***/
+
+
+#else /*** 发布版 ***/ // cn //https://api.egcard.cn/goods/getSpecCategoryGoodsList/3
+#define UMAppKey    @"59c9ce364544cb20ac0003f9"
+#define UMChannelId     @"appStore"
+#define ZCKey     @"2657940654064d43a261b555a955bf56"
+#define GDAppKey    @"ba8acf279e3ffce1b3f27f9491af85c5"
+#define BugtagsKey    @"57fbad533143f0e87316dbc43e2f54c1"
+#define JPPushKey   @"8a6e9a879f434dbbcb584d96"
+#define EUKaLog(...)
+#define EUKaLogFunc
+#define EUKaHttpServer(function) [NSString stringWithFormat:@"https://api.euka.cn/%@",function]
+#define EUKaPicNetServer(function) [NSString stringWithFormat:@"http://static.euka.cn/%@",function]
+#define EUKaPicUploadServer(function) [NSString stringWithFormat:@"https://static.euka.cn/%@",function]
+
+#define EUKaPayNetServer(function) [NSString stringWithFormat:@"https://pay.euka.cn/%@",function]
+#define EUKaH5Server(function) [NSString stringWithFormat:@"https://m.euka.cn/%@",function]
+#define EUKUserProtocol @"https://m.euka.cn/appStatic/agreement.html"
+#define kAppStoreVersion   [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+#define kAppStoreVersionShow   @""
+#endif
+
+/*** 服务器数据获取 ***/
+#define APPHttpCode [resDict[@"resCode"] intValue]
+#define APPHttpMsg  resDict[@"msg"]
+#define APPHttpResult  resDict[@"result"]
+
+#define APPDATAHttpCode [data[@"resCode"] intValue]
+#define APPDATAHttpMsg  data[@"msg"]
+#define APPDATAHttpResult  data[@"result"]
+
+/*** 颜色 ***/
+#define APPColorA(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)/255.0]
+#define APPColor(r, g, b) APPColorA((r), (g), (b), 255)
+#define APPRandomColor [UIColor randomColor]
+#define APPGrayColor(v) APPColor((v), (v), (v))
+
+/*** 主题色 ***/
+#define APPBlueHexVlue   @"#3d95ff"  //@"#3282f5"
+#define APPNavBlueColor  [UIColor colorWithHexString:EUKaBlueHexVlue alpha:1]
+#define APPBackBlueColor EUKaNavBlueColor
+#define APPNavBlackColor  [UIColor colorWithHexString:@"#2c2c2c" alpha:1]
+#define APPTextBlueColor  [UIColor colorWithHexString:@"#3282f5" alpha:1]
+#define APPBackLightBlueColor  [UIColor colorWithHexString:@"#b2d2ff" alpha:1]
+
+// 背景色
+#define APPCommonBgColor [UIColor colorWithHexString:@"#f9f9f9" alpha:1]
+#define APPLineColor  [UIColor colorWithHexString:@"#e5e5e5" alpha:1]
+#define APPTextColor  [UIColor colorWithHexString:@"#333333" alpha:1]
+#define APPTextLightColor  [UIColor colorWithHexString:@"#666666" alpha:1]
+#define APPPlaceHolderColor  [UIColor colorWithHexString:@"#aaaaaa" alpha:1]
+
+#define APPTextWhiteColor  [UIColor colorWithHexString:@"#ffffff" alpha:1]
+#define APPTextOrangeColor  [UIColor colorWithHexString:@"#ff9a22" alpha:1]
+#define APPTextRedColor  [UIColor colorWithHexString:@"#ff5122" alpha:1]
+
+/*** 屏幕适配 ***/
+//主屏幕的宽度
+#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
+//主屏幕的高度
+#define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
+//获取视图动态的宽度
+#define SCREEN_RATE_640_WIDTH(view_width) (view_width / 750.0) * SCREEN_WIDTH
+//获取视图动态的高度
+#define SCREEN_RATE_640_HEIGHT(view_height,view_width) (view_height *(SCREEN_RATE_640_WIDTH(view_width))) / 750.0
+//获取视图的宽度
+#define VIEW_WIDTH(view) view.frame.size.width
+//获取视图的高度
+#define VIEW_HEIGHT(view) view.frame.size.height
+//获取视图的X值
+#define VIEW_X(view) view.frame.origin.x
+//获取视图的Y值
+#define VIEW_Y(view) view.frame.origin.y
+//获取视图底部位置
+#define VIEW_BOTTOM(view) VIEW_Y(view) + VIEW_HEIGHT(view)
+//获取视图右侧位置
+#define VIEW_RIGHT(view) VIEW_WIDTH(view) + VIEW_X(view)
+
+//判断是否是iPhone4s
+#define IS_IPHONE4S (([[UIScreen mainScreen] bounds].size.height-480)?NO:YES)
+//判断是否是iPhone5
+#define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height-568)?NO:YES)
+//判断是否是iPhone6、iPhone7
+#define IS_IPHONE6 (([[UIScreen mainScreen] bounds].size.height-667)?NO:YES)
+//判断是否是iPhone6plush、7plus
+#define IS_IPHONE6_PLUS (([[UIScreen mainScreen] bounds].size.height-736)?NO:YES)
+
+//Font
+
+//请求超时
+#define RequestTimeOut 30
+
+
+//第三方的头文件
+#import "AFNetworking.h"
+#import "SVProgressHUD.h"
+#import "FMDB.h"
+#import "MJExtension.h"
+#import "UserDefualtUtils.h"
+#import "CLRotationView.h"
+
+#import "SIAlertView.h"
+#import "UIImageView+WebCache.h"
+
+//Categry
+#import "UIButton+Count.h"
+
+//controller:
+
+//View:
+
+//cell
+
+//Utils
+#import "AppCheckOut.h"
+#import "ClearCache.h"
+#import "AppChache.h"
+#import "AppHashEncryption.h"
+#endif

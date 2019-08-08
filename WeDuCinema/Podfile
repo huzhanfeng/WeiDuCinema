@@ -1,0 +1,16 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'WeDuCinema' do
+  
+  pod 'SDWebImage'
+  pod 'AFNetworking'
+  pod 'SVProgressHUD' 
+  pod 'WechatOpenSDK'
+  pod 'Masonry'
+  pod 'JPush'
+  pod 'SJVideoPlayer'
+  pod 'MJExtension','~>3.0.17'
+
+
+end
